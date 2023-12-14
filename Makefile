@@ -7,6 +7,9 @@ start-dev:
 start-prod:
 	docker compose -f "docker-compose.prod.yml" up -d --build
 
+restart:
+    docker compose restart
+
 stop:
     docker compose down
 

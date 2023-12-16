@@ -69,6 +69,9 @@ DOCUMENTATION.md
 .pnpm-store
 .eslintcache
 
-# Yarn
+# Prisma
 prisma/*
 !prisma/schema.prisma
+
+# Contentlayer
+.contentlayer

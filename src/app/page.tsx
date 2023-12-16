@@ -1,6 +1,15 @@
 import { allPosts } from "contentlayer/generated";
 import Image from "next/image";
 import Link from "next/link";
+import { genPageMetadata } from "./seo";
+
+export const metadata = genPageMetadata({
+    title: "Homepage",
+    description: "Description",
+    alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_URL}`,
+    },
+});
 
 export default function Home() {
     return (

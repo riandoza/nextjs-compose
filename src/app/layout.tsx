@@ -9,10 +9,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-    title: `${process.env["NEXT_PUBLIC_TITLE"]}`,
-    description: `${process.env["NEXT_PUBLIC_EXCERPT"]}`,
-};
+const siteUrl: string = `${process.env.NEXT_PUBLIC_URL}`;
+const siteName: string = `${process.env.NEXT_PUBLIC_SITENAME}`;
+const publishedAt: string = "2023-11-01T00:00:00.000Z";
 
 export default function RootLayout({
     children,

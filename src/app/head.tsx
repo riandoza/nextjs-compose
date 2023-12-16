@@ -12,7 +12,6 @@ export default function Head() {
                 httpEquiv="Permissions-Policy"
                 content="interest-cohort=()"
             ></meta>
-            <link rel="canonical" href={process.env["NEXT_PUBLIC_URL"]} />
 
             <link
                 rel="icon"

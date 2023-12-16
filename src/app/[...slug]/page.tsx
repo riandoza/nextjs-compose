@@ -29,10 +29,33 @@ export async function generateMetadata({
     if (!page) {
         return {};
     }
-
+    const image = null;
+    const pageUrl = `${process.env.NEXT_PUBLIC_URL}/${page.slugAsParams}`;
     return {
-        title: page.title,
+        title: {
+            template: `%s | ${page.title}`,
+            default: `${page.title}`, // a default is required when creating a template
+        },
         description: page.description,
+        alternates: {
+            canonical: `${pageUrl}`,
+        },
+        metadataBase: new URL(pageUrl),
+        openGraph: {
+            title: `${page.title}`,
+            description:
+                page.description || `${process.env.NEXT_PUBLIC_EXCERPT}`,
+            url: `${pageUrl}`,
+            siteName: `${process.env.NEXT_PUBLIC_AUTHOR}`,
+            images: image ? [image] : [`${process.env.NEXT_PUBLIC_BANNER}`],
+            locale: "id_ID",
+            type: "website",
+        },
+        twitter: {
+            title: `${page.title}`,
+            card: "summary_large_image",
+            images: image ? [image] : [`${process.env.NEXT_PUBLIC_BANNER}`],
+        },
     };
 }
 

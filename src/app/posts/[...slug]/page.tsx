@@ -29,10 +29,32 @@ export async function generateMetadata({
     if (!post) {
         return {};
     }
-
+    const postUrl = `${process.env.NEXT_PUBLIC_URL}/posts/${post.slugAsParams}`;
     return {
-        title: post.title,
+        title: {
+            template: `%s | ${post.title}`,
+            default: `${post.title}`, // a default is required when creating a template
+        },
         description: post.description,
+        alternates: {
+            canonical: `${postUrl}`,
+        },
+        metadataBase: new URL(postUrl),
+        openGraph: {
+            title: `${post.title}`,
+            description:
+                post.description || `${process.env.NEXT_PUBLIC_EXCERPT}`,
+            url: `${postUrl}`,
+            siteName: `${process.env.NEXT_PUBLIC_AUTHOR}`,
+            //images: image ? [image] : [`${process.env.NEXT_PUBLIC_BANNER}`],
+            locale: "id_ID",
+            type: "website",
+        },
+        twitter: {
+            title: `${post.title}`,
+            card: "summary_large_image",
+            //images: image ? [image] : [`${process.env.NEXT_PUBLIC_BANNER}`],
+        },
     };
 }
 

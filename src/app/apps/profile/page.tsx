@@ -1,7 +1,7 @@
-import Header from "@/components/header.component";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
+import { getServerSession } from "next-auth"
+
+import { authOptions } from "@/lib/auth"
 
 export default async function Profile() {
     // const { status } = useSession({
@@ -15,18 +15,15 @@ export default async function Profile() {
     //     return <p>Loading....</p>;
     // }
 
-    const session = await getServerSession(authOptions);
-    const user = session?.user;
-    if (!user) return redirect("/api/auth/signin");
+    const session = await getServerSession(authOptions)
+    const user = session?.user
+    if (!user) return redirect("/api/auth/signin")
     return (
         <>
-            <Header />
             <section className="bg-ct-blue-600  min-h-screen pt-20">
-                <div className="max-w-4xl mx-auto bg-ct-dark-100 rounded-md h-[20rem] flex justify-center items-center">
+                <div className="bg-ct-dark-100 mx-auto flex h-[20rem] max-w-4xl items-center justify-center rounded-md">
                     <div>
-                        <p className="mb-3 text-5xl text-center font-semibold">
-                            Profile Page
-                        </p>
+                        <p className="mb-3 text-center text-5xl font-semibold">Profile Page</p>
                         {!user ? (
                             <p>Loading...</p>
                         ) : (
@@ -41,5 +38,5 @@ export default async function Profile() {
                 </div>
             </section>
         </>
-    );
+    )
 }

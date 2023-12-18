@@ -1,36 +1,34 @@
-import Head from "@/app/head";
-import { NextAuthProvider } from "@/app/providers";
-import ToastProvider from "@/app/toast.provider";
-import Header from "@/components/header.component";
-import Navbar from "@/components/navbar-component";
-import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
-import { Inter } from "next/font/google";
-import "./globals.css";
-const inter = Inter({ subsets: ["latin"] });
+import React from "react"
+import { Inter } from "next/font/google"
 
-const siteUrl: string = `${process.env.NEXT_PUBLIC_URL}`;
-const siteName: string = `${process.env.NEXT_PUBLIC_SITENAME}`;
-const publishedAt: string = "2023-11-01T00:00:00.000Z";
+import { MainNav } from "@/components/MainNav"
+import Navbar from "@/components/Navbar"
+import Head from "@/app/head"
+import { NextAuthProvider } from "@/app/providers"
+import ToastProvider from "@/app/toast.provider"
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+import "./globals.css"
+
+const inter = Inter({ subsets: ["latin"] })
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="id" className="dark" suppressHydrationWarning>
             <Head />
             <body
-                className={`antialiased min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ${inter.className}`}
+                className={`min-h-screen bg-white text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-50 ${inter.className}`}
             >
-                <div className="max-w-screen-xl mx-auto relative top-24">
+                <div className="relative top-24 mx-auto max-w-screen-xl">
                     <NextAuthProvider>
-                        <Navbar />
+                        <header className="fixed start-0 top-0 z-20 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
+                            <Navbar />
+                        </header>
+
+                        {/* <MainNav /> */}
                         <ToastProvider>{children}</ToastProvider>
                     </NextAuthProvider>
                 </div>
             </body>
         </html>
-    );
+    )
 }

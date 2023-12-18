@@ -1,8 +1,9 @@
-import { prisma } from "@/lib/prisma";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { compare } from "bcryptjs";
-import NextAuth, { CookiesOptions, type NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { compare } from "bcryptjs"
+import NextAuth, { CookiesOptions, type NextAuthOptions } from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+
+import { prisma } from "@/lib/prisma"
 
 const cookies: Partial<CookiesOptions> = {
     sessionToken: {
@@ -15,7 +16,7 @@ const cookies: Partial<CookiesOptions> = {
             secure: true,
         },
     },
-};
+}
 
 // export const config = {
 //     providers: [], // rest of your config
@@ -54,20 +55,17 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 if (!credentials?.email || !credentials.password) {
-                    return null;
+                    return null
                 }
 
                 const user = await prisma.user.findUnique({
                     where: {
                         email: credentials.email,
                     },
-                });
+                })
 
-                if (
-                    !user ||
-                    !(await compare(credentials.password, user.password!))
-                ) {
-                    return null;
+                if (!user || !(await compare(credentials.password, user.password!))) {
+                    return null
                 }
 
                 return {
@@ -75,7 +73,7 @@ export const authOptions: NextAuthOptions = {
                     email: user.email,
                     name: user.name,
                     randomKey: "Hey cool",
-                };
+                }
             },
         }),
     ],
@@ -89,20 +87,20 @@ export const authOptions: NextAuthOptions = {
                     id: token.id,
                     randomKey: token.randomKey,
                 },
-            };
+            }
         },
         jwt: ({ token, user }) => {
             if (user) {
-                const u = user as unknown as any;
+                const u = user as unknown as any
                 return {
                     ...token,
                     id: u.id,
                     randomKey: u.randomKey,
-                };
+                }
             }
-            return token;
+            return token
         },
     },
-};
+}
 
-export default NextAuth(authOptions);
+export default NextAuth(authOptions)

@@ -1,26 +1,6 @@
-import { NextResponse } from "next/server";
-
-export function createErrorResponse(
-    message: string,
-    statusCode: number
-): NextResponse {
-    const errorResponse = {
-        status: statusCode >= 500 ? "error" : "fail",
-        message,
-    };
-
-    return new NextResponse(JSON.stringify(errorResponse), {
-        status: statusCode,
-        headers: { "Content-Type": "application/json" },
-    });
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+ 
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }
-
-export const isValidUrl = (urlString: string) => {
-    let url;
-    try {
-        url = new URL(urlString);
-    } catch (e) {
-        return false;
-    }
-    return url.protocol === "http:" || url.protocol === "https:";
-};

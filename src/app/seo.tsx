@@ -1,21 +1,16 @@
-import { Metadata } from "next";
+import { Metadata } from "next"
 
 interface PageSEOProps {
-    title: string;
-    description?: string;
-    image?: string;
-    [key: string]: any;
+    title: string
+    description?: string
+    image?: string
+    [key: string]: any
 }
 
-export function genPageMetadata({
-    title,
-    description,
-    image,
-    ...rest
-}: PageSEOProps): Metadata {
-    let pageUrl = "";
-    if (typeof rest.alternates?.canonical != undefined) {
-        pageUrl = rest.alternates?.canonical;
+export function genPageMetadata({ title, description, image, ...rest }: PageSEOProps): Metadata {
+    let pageUrl = ""
+    if (typeof rest.alternates?.canonical != "undefined") {
+        pageUrl = rest.alternates?.canonical
     }
     return {
         title: {
@@ -39,5 +34,5 @@ export function genPageMetadata({
             images: image ? [image] : [`${process.env.NEXT_PUBLIC_BANNER}`],
         },
         ...rest,
-    };
+    }
 }

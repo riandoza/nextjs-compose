@@ -1,0 +1,10 @@
+# Ignore artifacts:
+coverage
+dist
+node_modules
+.next
+build
+.contentlayer
+.vscode
+.yarn
+prisma

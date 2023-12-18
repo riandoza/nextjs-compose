@@ -1,12 +1,12 @@
 version: "3.8"
 services:
-  frontend:
-    container_name: frontend
-    build:
-      context: .
-      target: production
-    restart: always
-    environment:
-      - NODE_ENV=production
-    ports:
-      - 3000:3000
+    frontend:
+        container_name: frontend
+        build:
+            context: .
+            target: production
+        restart: always
+        environment:
+            - NODE_ENV=production
+        ports:
+            - 3000:3000

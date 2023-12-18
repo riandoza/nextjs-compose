@@ -1,10 +1,10 @@
-NEXTJS 14 With Docker Compose
+# NEXTJS 14 With Docker Compose
 
 This is project skeleton using Next.JS 14 with docker compose production ready.
 
 "packageManager": "yarn@4.0.2"
 
-### Featured
+## Featured
 
 - Nextjs 14 Server Action
 - Docker compose development and production

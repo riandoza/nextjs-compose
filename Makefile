@@ -1,17 +1,22 @@
 # create:
 # 	yarn create next-app . --ts --eslint --tailwind --src-dir --app --import-alias --use-yarn
 
-start-dev:
+# Development locally
+dev:
+    yarn dev
+
+# Development inside docker
+compose-dev:
     docker compose up -d
 
-start-prod:
+# Production inside docker
+compose-prod:
 	docker compose -f "docker-compose.prod.yml" up -d --build
 
-restart:
+# Restart docker
+compose-restart:
     docker compose restart
 
-stop:
+# Stop docker
+compose-stop:
     docker compose down
-
-sharp:
-	yarn add sharp

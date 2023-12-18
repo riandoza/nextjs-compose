@@ -1,4 +1,4 @@
-import { genPageMetadata } from "./seo"
+import { genPageMetadata } from "@/components/seo"
 
 export const metadata = genPageMetadata({
     title: `${process.env["NEXT_PUBLIC_TITLE"]}`,

@@ -3,6 +3,15 @@ import Image from "next/image"
 
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card"
 import LoadMore from "@/components/loadMore"
+import { genPageMetadata } from "@/components/seo"
+
+export const metadata = genPageMetadata({
+    title: "Infinity Scrolling",
+    description: "Infinity Scrolling",
+    alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_URL}/pokemon`,
+    },
+})
 
 const PAGE_SIZE: number = Number(process.env["SCROLLING_PER_PAGE"]) || 20
 

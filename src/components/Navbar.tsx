@@ -82,6 +82,11 @@ export default function Navbar() {
                                                     {component.description}
                                                 </ListItem>
                                             ))}
+                                            <ListItem
+                                                key="more_blogs"
+                                                title="Read more all blog posts..."
+                                                href="/posts"
+                                            ></ListItem>
                                         </ul>
                                     </NavigationMenuContent>
                                 </NavigationMenuItem>

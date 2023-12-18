@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 import { allPosts } from "contentlayer/generated"
 
 import { Label } from "@/components/ui/label"
-import { genPageMetadata } from "@/app/seo"
+import { genPageMetadata } from "@/components/seo"
 
 export const metadata = genPageMetadata({
     title: "Blog",

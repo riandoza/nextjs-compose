@@ -2,6 +2,7 @@ import React from "react"
 import { Inter } from "next/font/google"
 
 import { Toaster } from "@/components/ui/toaster"
+import Footer from "@/components/footer"
 import Navbar from "@/components/Navbar"
 import Head from "@/app/head"
 import { NextAuthProvider } from "@/app/providers"
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             <Navbar />
                         </header>
                         {children}
+                        <Footer />
                     </NextAuthProvider>
                     <Toaster />
                 </div>

@@ -15,7 +15,7 @@ export const metadata = genPageMetadata({
 })
 
 export default function Home() {
-    if (!allPosts) return notFound()
+    if (!allPosts || allPosts.length == 0) return notFound()
     return (
         <main className="container mx-auto px-4 text-sm">
             <div className="prose max-w-full dark:prose-invert">

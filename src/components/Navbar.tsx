@@ -1,23 +1,31 @@
 "use client"
 
+import { title } from "process"
 import * as React from "react"
 import { useState } from "react"
 import Link from "next/link"
-import { Menu, Search } from "lucide-react"
+import { allPosts } from "contentlayer/generated"
+import { ChevronRight, Loader2, Menu, Search } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
 
 import { cn } from "@/lib/utils"
 
 import Logo from "./logo"
-import NavItem from "./NavItem"
 import { Button, buttonVariants } from "./ui/button"
+import {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+    navigationMenuTriggerStyle,
+} from "./ui/navigation-menu"
 import { toast } from "./ui/use-toast"
 
 export default function Navbar() {
     const { data: session } = useSession()
     const [state, setState] = React.useState(false)
-    const [navActive, setNavActive] = useState<true | false>(false)
-    const [activeIdx, setActiveIdx] = useState(-1)
     const menus = [
         { title: "Home", path: "/" },
         { title: "Blog", path: "/posts" },
@@ -25,9 +33,10 @@ export default function Navbar() {
         { title: "Pokemon", path: "/pokemon" },
     ]
     const user = session?.user
+    let latestPosts = allPosts.slice(0, 4)
 
     return (
-        <nav className="nav mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
+        <div className=" mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
             <Logo />
             <div className="flex items-center justify-between md:block md:py-5">
                 <div className="md:hidden">
@@ -40,57 +49,98 @@ export default function Navbar() {
                     </Button>
                 </div>
             </div>
+
             <div
                 className={`w-full items-center justify-between pb-3 md:order-1 md:mt-0 md:block md:w-auto md:pb-0 ${
                     state ? "block" : "hidden"
                 }`}
             >
-                <ul className="items-center justify-center space-y-4 md:flex md:space-x-6 md:space-y-0 ">
-                    {menus.map((item, idx) => (
-                        <li
-                            onClick={() => {
-                                setActiveIdx(idx)
-                                setNavActive(false)
-                                setState(!state)
-                            }}
-                            key={idx}
-                            className="text-gray-100 hover:text-indigo-600"
-                        >
-                            <NavItem active={activeIdx === idx} {...item} />
-                        </li>
-                    ))}
-                    {/* <form className="flex items-center  space-x-2 rounded-md border p-2">
-                        <Search className="h-5 w-5 flex-none text-gray-300" />
-                        <input
-                            className="w-full appearance-none text-gray-500 placeholder-gray-500 outline-none sm:w-auto"
-                            type="text"
-                            placeholder="Search"
-                        />
-                    </form> */}
-                    {user && (
-                        <>
-                            <Button
-                                onClick={() => signOut()}
-                                className="cursor-pointer rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                            >
-                                Logout <span aria-hidden="true">&rarr;</span>
-                            </Button>
-                        </>
-                    )}
-                    <Link
-                        className={buttonVariants({ variant: "outline" })}
-                        href={""}
-                        onClick={() => {
-                            toast({
-                                title: "Scheduled: Catch up",
-                                description: "Friday, February 10, 2023 at 5:57 PM",
-                            })
-                        }}
-                    >
-                        Action
-                    </Link>
-                </ul>
+                <NavigationMenu>
+                    <NavigationMenuList className="group flex list-none flex-wrap items-center justify-center pt-4 md:flex-row md:pt-0  lg:space-x-1">
+                        <NavigationMenuItem>
+                            <Link href="/" legacyBehavior passHref>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
+                            </Link>
+                        </NavigationMenuItem>
+
+                        {latestPosts.length > 0 && (
+                            <>
+                                <NavigationMenuItem>
+                                    <NavigationMenuTrigger>
+                                        <Link href="/posts" legacyBehavior passHref>
+                                            <NavigationMenuLink>Blog</NavigationMenuLink>
+                                        </Link>
+                                    </NavigationMenuTrigger>
+                                    <NavigationMenuContent>
+                                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                                            {latestPosts.map((component) => (
+                                                <ListItem
+                                                    key={component.title}
+                                                    title={component.title}
+                                                    href={component.slug}
+                                                >
+                                                    {component.description}
+                                                </ListItem>
+                                            ))}
+                                        </ul>
+                                    </NavigationMenuContent>
+                                </NavigationMenuItem>
+                            </>
+                        )}
+
+                        <NavigationMenuItem>
+                            <Link href="/about" legacyBehavior passHref>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
+                            </Link>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <Link href="/pokemon" legacyBehavior passHref>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                    Pokemon
+                                </NavigationMenuLink>
+                            </Link>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <Link href="" legacyBehavior passHref>
+                                <NavigationMenuLink
+                                    className={buttonVariants({ variant: "destructive" })}
+                                    onClick={() => {
+                                        toast({
+                                            title: "Scheduled: Catch up",
+                                            description: "Friday, February 10, 2023 at 5:57 PM",
+                                        })
+                                    }}
+                                >
+                                    Action <ChevronRight className="h-4 w-4" />
+                                </NavigationMenuLink>
+                            </Link>
+                        </NavigationMenuItem>
+                    </NavigationMenuList>
+                </NavigationMenu>
             </div>
-        </nav>
+        </div>
     )
 }
+
+const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
+    ({ className, title, children, ...props }, ref) => {
+        return (
+            <li>
+                <NavigationMenuLink asChild>
+                    <a
+                        ref={ref}
+                        className={cn(
+                            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                            className
+                        )}
+                        {...props}
+                    >
+                        <div className="text-sm font-medium leading-none">{title}</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
+                    </a>
+                </NavigationMenuLink>
+            </li>
+        )
+    }
+)
+ListItem.displayName = "ListItem"

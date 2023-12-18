@@ -1,7 +1,3 @@
-import Image from "next/image"
-import Link from "next/link"
-import { allPosts } from "contentlayer/generated"
-
 import { genPageMetadata } from "./seo"
 
 export const metadata = genPageMetadata({

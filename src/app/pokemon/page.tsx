@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card"
 import LoadMore from "@/components/loadMore"
 
-const PAGE_SIZE = 20
+const PAGE_SIZE: number = Number(process.env["SCROLLING_PER_PAGE"]) || 20
 
 type PokemonType = {
     name: string

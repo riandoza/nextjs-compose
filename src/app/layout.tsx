@@ -2,7 +2,6 @@ import React from "react"
 import { Inter } from "next/font/google"
 
 import { Toaster } from "@/components/ui/toaster"
-import { MainNav } from "@/components/MainNav"
 import Navbar from "@/components/Navbar"
 import Head from "@/app/head"
 import { NextAuthProvider } from "@/app/providers"
@@ -23,8 +22,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <header className="fixed start-0 top-0 z-20 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
                             <Navbar />
                         </header>
-
-                        {/* <MainNav /> */}
                         {children}
                     </NextAuthProvider>
                     <Toaster />

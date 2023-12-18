@@ -30,12 +30,4 @@ or
 >
 > cd next-app-project
 
-For development locally
-
-> yarn dev
->
-> For development with docker compose
-> make start-dev
->
-> For Production with docker compose
-> make start-prod
+Available command, see Makefile

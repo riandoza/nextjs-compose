@@ -1,8 +1,20 @@
-## NEXTJS 14 With Docker Compose
+NEXTJS 14 With Docker Compose
 
 This is project skeleton using Next.JS 14 with docker compose production ready.
 
 "packageManager": "yarn@4.0.2"
+
+### Featured
+
+- Nextjs 14 Server Action
+- Docker compose development and production
+- Tailwind & [Shadcn/UI](https://ui.shadcn.com/docs/installation/next)
+- NextAuth.js
+- Middleware
+- SEO Ready
+- Infinity Scroll
+- Contentlayer Post & Page
+- Prisma SQLite
 
 ### Usage
 

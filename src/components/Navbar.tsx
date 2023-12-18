@@ -6,9 +6,12 @@ import Link from "next/link"
 import { Menu, Search } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
 
+import { cn } from "@/lib/utils"
+
 import Logo from "./logo"
 import NavItem from "./NavItem"
 import { Button, buttonVariants } from "./ui/button"
+import { toast } from "./ui/use-toast"
 
 export default function Navbar() {
     const { data: session } = useSession()
@@ -74,7 +77,16 @@ export default function Navbar() {
                             </Button>
                         </>
                     )}
-                    <Link className={buttonVariants({ variant: "outline" })} onClick={() => alert("clicked")} href={""}>
+                    <Link
+                        className={buttonVariants({ variant: "outline" })}
+                        href={""}
+                        onClick={() => {
+                            toast({
+                                title: "Scheduled: Catch up",
+                                description: "Friday, February 10, 2023 at 5:57 PM",
+                            })
+                        }}
+                    >
                         Action
                     </Link>
                 </ul>

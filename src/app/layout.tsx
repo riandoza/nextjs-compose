@@ -1,11 +1,11 @@
 import React from "react"
 import { Inter } from "next/font/google"
 
+import { Toaster } from "@/components/ui/toaster"
 import { MainNav } from "@/components/MainNav"
 import Navbar from "@/components/Navbar"
 import Head from "@/app/head"
 import { NextAuthProvider } from "@/app/providers"
-import ToastProvider from "@/app/toast.provider"
 
 import "./globals.css"
 
@@ -25,8 +25,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         </header>
 
                         {/* <MainNav /> */}
-                        <ToastProvider>{children}</ToastProvider>
+                        {children}
                     </NextAuthProvider>
+                    <Toaster />
                 </div>
             </body>
         </html>

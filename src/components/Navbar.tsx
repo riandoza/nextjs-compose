@@ -25,7 +25,7 @@ import { toast } from "./ui/use-toast"
 
 export default function Navbar() {
     const { data: session } = useSession()
-    const [state, setState] = React.useState(false)
+    const [state, setState] = React.useState(true)
     const menus = [
         { title: "Home", path: "/" },
         { title: "Blog", path: "/posts" },
@@ -55,9 +55,9 @@ export default function Navbar() {
                     state ? "block" : "hidden"
                 }`}
             >
-                <NavigationMenu>
-                    <NavigationMenuList className="group flex list-none flex-wrap items-center justify-center pt-4 md:flex-row md:pt-0  lg:space-x-1">
-                        <NavigationMenuItem>
+                <NavigationMenu className="">
+                    <NavigationMenuList className="group max-w-screen-xl list-none flex-wrap items-center justify-center pt-4 md:flex-none md:flex-row  md:pt-0 lg:flex lg:space-x-1">
+                        <NavigationMenuItem className="block w-full md:w-max">
                             <Link href="/" legacyBehavior passHref>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
                             </Link>
@@ -65,7 +65,7 @@ export default function Navbar() {
 
                         {latestPosts.length > 0 && (
                             <>
-                                <NavigationMenuItem>
+                                <NavigationMenuItem className="block w-full md:w-max">
                                     <NavigationMenuTrigger>
                                         <Link href="/posts" legacyBehavior passHref>
                                             <NavigationMenuLink>Blog</NavigationMenuLink>
@@ -93,22 +93,22 @@ export default function Navbar() {
                             </>
                         )}
 
-                        <NavigationMenuItem>
+                        <NavigationMenuItem className="block w-full md:w-max">
                             <Link href="/about" legacyBehavior passHref>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
                             </Link>
                         </NavigationMenuItem>
-                        <NavigationMenuItem>
+                        <NavigationMenuItem className="block w-full md:w-max">
                             <Link href="/pokemon" legacyBehavior passHref>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                     Pokemon
                                 </NavigationMenuLink>
                             </Link>
                         </NavigationMenuItem>
-                        <NavigationMenuItem>
+                        <NavigationMenuItem className="block w-full md:w-max">
                             <Link href="" legacyBehavior passHref>
                                 <NavigationMenuLink
-                                    className={buttonVariants({ variant: "destructive" })}
+                                    className={`${buttonVariants({ variant: "destructive" })} w-full md:w-max`}
                                     onClick={() => {
                                         toast({
                                             title: "Scheduled: Catch up",

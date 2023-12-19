@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react"
+import { Facebook, Github, Instagram, Linkedin, Twitter } from "lucide-react"
 
 export default function Footer() {
     return (
@@ -22,17 +22,20 @@ export default function Footer() {
                     </ul>
                 </div>
                 <div className="mt-4 flex justify-center space-x-4 lg:mt-0">
-                    <Link href={"#"}>
+                    <Link href={"https://www.facebook.com/"}>
                         <Facebook />
                     </Link>
-                    <Link href={"#"}>
+                    <Link href={"https://twitter.com/"}>
                         <Twitter />
                     </Link>
-                    <Link href={"#"}>
+                    <Link href={"https://www.instagram.com/"}>
                         <Instagram />
                     </Link>
-                    <Link href={"#"}>
+                    <Link href={"https://www.linkedin.com/"}>
                         <Linkedin />
+                    </Link>
+                    <Link href={"https://www.github.com/"}>
+                        <Github />
                     </Link>
                 </div>
             </div>

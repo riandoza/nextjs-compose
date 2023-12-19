@@ -1,6 +1,6 @@
 "use client"
 
-import { ChangeEvent, useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 import { signIn } from "next-auth/react"
 
 export const RegisterForm = () => {

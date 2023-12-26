@@ -11,7 +11,10 @@
             "name": "Next.js: debug client-side",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:3000"
+            "runtimeExecutable": "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+            "userDataDir": false,
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
         },
         {
             "name": "Next.js: debug full stack",
@@ -21,7 +24,7 @@
             "serverReadyAction": {
                 "pattern": "- Local:.+(https?://.+)",
                 "uriFormat": "%s",
-                "action": "debugWithChrome"
+                "action": "openExternally"
             }
         }
     ]

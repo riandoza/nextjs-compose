@@ -48,6 +48,11 @@ function parseContentFile(filePath: string): any {
 }
 
 export function getAllPosts(): Post[] {
+  // Server-side only
+  if (typeof window !== 'undefined') {
+    return []
+  }
+  
   const postFiles = getContentFiles('posts', '.mdx')
   return postFiles
     .map(parseContentFile)
@@ -56,6 +61,11 @@ export function getAllPosts(): Post[] {
 }
 
 export function getAllPages(): Page[] {
+  // Server-side only
+  if (typeof window !== 'undefined') {
+    return []
+  }
+  
   const pageFiles = getContentFiles('pages', '.mdx')
   return pageFiles
     .map(parseContentFile)

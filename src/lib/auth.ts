@@ -1,16 +1,17 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { compare } from "bcryptjs"
-import NextAuth, { CookiesOptions, type NextAuthOptions } from "next-auth"
+import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
-import { prisma } from "@/lib/prisma"
+import { db } from "@/db/connection"
+import { getUserByEmail } from "@/lib/db-drizzle"
 
-const cookies: Partial<CookiesOptions> = {
+const cookies = {
     sessionToken: {
         name: `${process.env.ACCESS_TOKEN}`,
         options: {
             httpOnly: true,
-            sameSite: "none",
+            sameSite: "none" as const,
             path: "/",
             domain: process.env.NEXT_PUBLIC_DOMAIN,
             secure: true,
@@ -31,10 +32,8 @@ const cookies: Partial<CookiesOptions> = {
 //     return getServerSession(...args, config);
 // }
 
-export const authOptions: NextAuthOptions = {
-    // This is a temporary fix for prisma client.
-    // @see https://github.com/prisma/prisma/issues/16117
-    adapter: PrismaAdapter(prisma as any),
+export const { handlers, auth, signIn, signOut } = NextAuth({
+    adapter: DrizzleAdapter(db),
     pages: {
         signIn: "/login",
     },
@@ -42,9 +41,10 @@ export const authOptions: NextAuthOptions = {
         strategy: "jwt",
     },
     cookies: cookies,
+    trustHost: true,
     providers: [
         CredentialsProvider({
-            name: "Sign in",
+            name: "credentials",
             credentials: {
                 email: {
                     label: "Email",
@@ -58,13 +58,9 @@ export const authOptions: NextAuthOptions = {
                     return null
                 }
 
-                const user = await prisma.user.findUnique({
-                    where: {
-                        email: credentials.email,
-                    },
-                })
+                const user = await getUserByEmail(credentials.email as string)
 
-                if (!user || !(await compare(credentials.password, user.password!))) {
+                if (!user || !user.password || !(await compare(credentials.password as string, user.password))) {
                     return null
                 }
 
@@ -72,7 +68,8 @@ export const authOptions: NextAuthOptions = {
                     id: user.id,
                     email: user.email,
                     name: user.name,
-                    randomKey: "Hey cool",
+                    role: user.role,
+                    isActive: user.isActive,
                 }
             },
         }),
@@ -84,23 +81,22 @@ export const authOptions: NextAuthOptions = {
                 ...session,
                 user: {
                     ...session.user,
-                    id: token.id,
-                    randomKey: token.randomKey,
+                    id: token.id as string,
+                    role: token.role as string,
+                    isActive: token.isActive as boolean,
                 },
             }
         },
         jwt: ({ token, user }) => {
             if (user) {
-                const u = user as unknown as any
                 return {
                     ...token,
-                    id: u.id,
-                    randomKey: u.randomKey,
+                    id: user.id,
+                    role: user.role,
+                    isActive: user.isActive,
                 }
             }
             return token
         },
     },
-}
-
-export default NextAuth(authOptions)
+})

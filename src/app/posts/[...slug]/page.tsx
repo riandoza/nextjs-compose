@@ -1,22 +1,23 @@
 import { Suspense } from "react"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { allPosts } from "contentlayer/generated"
+import { allPosts, getPostBySlug } from "@/lib/content"
 
 import { Mdx } from "@/components/mdx-components"
 
 interface PostProps {
-    params: {
+    params: Promise<{
         slug: string[]
-    }
+    }>
 }
 
 async function getPostFromParams(params: PostProps["params"]) {
-    const slug = params?.slug?.join("/")
-    const post = allPosts.find((post) => post.slugAsParams === slug)
+    const resolvedParams = await params
+    const slug = `/posts/${resolvedParams?.slug?.join("/")}`
+    const post = getPostBySlug(slug)
 
     if (!post) {
-        null
+        return null
     }
 
     return post
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
     if (!post) {
         return {}
     }
-    const postUrl = `${process.env.NEXT_PUBLIC_URL}/posts/${post.slugAsParams}`
+    const postUrl = `${process.env.NEXT_PUBLIC_URL}${post.slug}`
     return {
         title: {
             template: `%s | ${post.title}`,
@@ -56,9 +57,9 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
     }
 }
 
-export async function generateStaticParams(): Promise<PostProps["params"][]> {
+export async function generateStaticParams() {
     return allPosts.map((post) => ({
-        slug: post.slugAsParams.split("/"),
+        slug: post.slug.replace('/posts/', '').split("/"),
     }))
 }
 
@@ -78,7 +79,7 @@ export default async function PostPage({ params }: PostProps) {
                         <p className="mt-0 text-xl text-slate-700 dark:text-slate-200">{post.description}</p>
                     )}
                     <hr className="my-4" />
-                    <Mdx code={post.body.code} />
+                    <Mdx>{post.content}</Mdx>
                 </article>
             </Suspense>
         </main>

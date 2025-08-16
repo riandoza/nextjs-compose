@@ -1,18 +1,17 @@
-"use client"
-
 import Image from "next/image"
-import { useMDXComponent } from "next-contentlayer/hooks"
 
 const components = {
     Image,
 }
 
 interface MdxProps {
-    code: string
+    children: string
 }
 
-export function Mdx({ code }: MdxProps) {
-    const Component = useMDXComponent(code)
-
-    return <Component components={components} />
+export function Mdx({ children }: MdxProps) {
+    return (
+        <div className="prose prose-gray dark:prose-invert max-w-none">
+            <div dangerouslySetInnerHTML={{ __html: children }} />
+        </div>
+    )
 }

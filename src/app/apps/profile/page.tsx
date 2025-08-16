@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation"
-import { getServerSession } from "next-auth"
 
-import { authOptions } from "@/lib/auth"
+import { auth } from "@/lib/auth"
+
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 
 export default async function Profile() {
     // const { status } = useSession({
@@ -15,7 +17,7 @@ export default async function Profile() {
     //     return <p>Loading....</p>;
     // }
 
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     const user = session?.user
     if (!user) return redirect("/api/auth/signin")
     return (

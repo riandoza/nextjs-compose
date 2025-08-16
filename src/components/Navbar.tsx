@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { cva } from "class-variance-authority"
-import { allPosts } from "contentlayer/generated"
+import { allPosts } from "@/lib/content"
 import { ChevronRight, Menu } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
 

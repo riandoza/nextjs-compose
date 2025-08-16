@@ -1,22 +1,13 @@
 import Link from "next/link"
-import { prisma } from "@/lib/prisma"
+import { getPostsForAdmin } from "@/lib/db-drizzle"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+
 async function getPosts() {
-  return await prisma.post.findMany({
-    include: {
-      author: {
-        select: {
-          name: true,
-          email: true,
-        },
-      },
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
-  })
+  return await getPostsForAdmin()
 }
 
 export default async function PostsPage() {
@@ -92,7 +83,7 @@ export default async function PostsPage() {
                     <span>By {post.author.name}</span>
                     <span className="mx-2">•</span>
                     <span>
-                      {new Date(post.updatedAt).toLocaleDateString()}
+                      {post.updatedAt ? new Date(post.updatedAt).toLocaleDateString() : 'Unknown'}
                     </span>
                   </div>
                   <div className="flex space-x-2">

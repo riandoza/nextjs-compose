@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { hash } from "bcryptjs"
 
-import { prisma } from "@/lib/prisma"
+import { createUser } from "@/lib/db-drizzle"
 
 export async function POST(req: Request) {
     try {
@@ -12,12 +12,10 @@ export async function POST(req: Request) {
         }
         const hashed_password = await hash(password, 12)
 
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email: email.toLowerCase(),
-                password: hashed_password,
-            },
+        const user = await createUser({
+            name,
+            email: email.toLowerCase(),
+            password: hashed_password,
         })
 
         return NextResponse.json({
@@ -36,3 +34,5 @@ export async function POST(req: Request) {
         )
     }
 }
+
+export const runtime = "nodejs"

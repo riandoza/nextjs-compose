@@ -1,21 +1,13 @@
-import { prisma } from "@/lib/prisma"
+import { getDashboardStats } from "@/lib/db-drizzle"
 import { getCurrentUser } from "@/lib/auth-utils"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-async function getAdminStats() {
-  const [userCount, postCount, pageCount, publishedPosts] = await Promise.all([
-    prisma.user.count(),
-    prisma.post.count(),
-    prisma.page.count(),
-    prisma.post.count({ where: { published: true } }),
-  ])
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 
-  return {
-    users: userCount,
-    posts: postCount,
-    pages: pageCount,
-    publishedPosts,
-  }
+async function getAdminStats() {
+  return await getDashboardStats()
 }
 
 export default async function AdminDashboard() {
@@ -39,7 +31,7 @@ export default async function AdminDashboard() {
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.users}</div>
+            <div className="text-2xl font-bold">{stats.totalUsers}</div>
           </CardContent>
         </Card>
 
@@ -48,7 +40,7 @@ export default async function AdminDashboard() {
             <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.posts}</div>
+            <div className="text-2xl font-bold">{stats.totalPosts}</div>
           </CardContent>
         </Card>
 
@@ -66,7 +58,7 @@ export default async function AdminDashboard() {
             <CardTitle className="text-sm font-medium">Total Pages</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.pages}</div>
+            <div className="text-2xl font-bold">{stats.totalPages}</div>
           </CardContent>
         </Card>
       </div>
@@ -88,24 +80,24 @@ export default async function AdminDashboard() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <a
+            <Link
               href="/admin/posts/new"
               className="block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
             >
               Create New Post
-            </a>
-            <a
+            </Link>
+            <Link
               href="/admin/pages/new"
               className="block w-full rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500"
             >
               Create New Page
-            </a>
-            <a
+            </Link>
+            <Link
               href="/admin/users"
               className="block w-full rounded-md bg-gray-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-gray-500"
             >
               Manage Users
-            </a>
+            </Link>
           </CardContent>
         </Card>
       </div>

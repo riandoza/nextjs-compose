@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { allPosts } from "contentlayer/generated"
+import { allPosts } from "@/lib/content"
 
 import { Label } from "@/components/ui/label"
 import { genPageMetadata } from "@/components/seo"

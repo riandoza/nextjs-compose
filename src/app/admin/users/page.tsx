@@ -1,21 +1,12 @@
-import { prisma } from "@/lib/prisma"
+import { getUsersWithCounts } from "@/lib/db-drizzle"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+
 async function getUsers() {
-  return await prisma.user.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      _count: {
-        select: {
-          posts: true,
-          pages: true,
-        },
-      },
-    },
-  })
+  return await getUsersWithCounts()
 }
 
 export default async function UsersPage() {
@@ -72,10 +63,10 @@ export default async function UsersPage() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <div className="flex space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                  <span>{user._count.posts} posts</span>
-                  <span>{user._count.pages} pages</span>
+                  <span>{user.postCount} posts</span>
+                  <span>0 pages</span>
                   <span>
-                    Joined {new Date(user.createdAt).toLocaleDateString()}
+                    Joined {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Unknown'}
                   </span>
                 </div>
                 <div className="flex space-x-2">

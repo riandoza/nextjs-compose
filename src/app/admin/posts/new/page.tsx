@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation"
 import { getCurrentUser } from "@/lib/auth-utils"
-import { prisma } from "@/lib/prisma"
+import { createPost as createPostDb } from "@/lib/db-drizzle"
 import PostForm from "@/components/admin/PostForm"
+
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 
 async function createPost(formData: FormData) {
   "use server"
@@ -22,16 +25,14 @@ async function createPost(formData: FormData) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "")
 
-  const post = await prisma.post.create({
-    data: {
-      title,
-      slug,
-      description,
-      content,
-      published,
-      publishedAt: published ? new Date() : null,
-      authorId: user.id,
-    },
+  const post = await createPostDb({
+    title,
+    slug,
+    description,
+    content,
+    published,
+    publishedAt: published ? new Date() : null,
+    authorId: user.id,
   })
 
   redirect(`/admin/posts/${post.id}`)

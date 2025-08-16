@@ -5,26 +5,25 @@ const nextConfig = {
     reactStrictMode: true,
     output: "standalone",
     pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+    serverExternalPackages: ["@prisma/client", "bcryptjs", "better-sqlite3", "drizzle-orm"],
     experimental: {
         serverActions: {
             bodySizeLimit: "2mb",
         },
-        serverComponentsExternalPackages: ["@prisma/client", "bcryptjs"],
-        turbo: {
-            rules: {
-                "*.md": [
-                    {
-                        loader: "@mdx-js/loader",
-                        options: {
-                            format: "md",
-                        },
+    },
+    turbopack: {
+        rules: {
+            "*.md": [
+                {
+                    loader: "@mdx-js/loader",
+                    options: {
+                        format: "md",
                     },
-                ],
-                "*.mdx": ["@mdx-js/loader"],
-            },
+                },
+            ],
+            "*.mdx": ["@mdx-js/loader"],
         },
     },
-    swcMinify: true,
     images: {
         remotePatterns: [
             {

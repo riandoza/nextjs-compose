@@ -1,70 +1,63 @@
-import { NextResponse } from "next/server"
-import { getToken } from "next-auth/jwt"
-import { withAuth } from "next-auth/middleware"
+import { NextRequest, NextResponse } from "next/server"
 
+import { auth } from "@/lib/auth"
 import { getErrorResponse } from "./lib/helpers"
 
-export default withAuth(
-    async function middleware(request) {
-        const token = await getToken({
-            req: request,
-            secret: process.env.NEXTAUTH_SECRET,
-            cookieName: process.env.ACCESS_TOKEN,
-        })
-        //console.log(request.nextauth.token);
-        //console.log(request.cookies.get("next-auth.session-token"));
-        const isIndexpage = request.nextUrl.pathname === "/"
-        const isAuthRoute = authRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
-        // const isVerifyRoute = verifyRoutes.some((route) =>
-        //     request.nextUrl.pathname.startsWith(route)
-        // );
-        const isGuestRoute = guestRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+export default async function middleware(request: NextRequest) {
+    const session = await auth()
+    const token = session?.user
 
-        if (!token && isAuthRoute) {
-            if (request.nextUrl.pathname.startsWith("/api")) {
-                return getErrorResponse(401, "Token is invalid or user doesn't exists")
-            }
-            const redirectUrl = new URL("/login", request.url)
-            redirectUrl.searchParams.set("callbackUrl", request.nextUrl.href)
-            return NextResponse.redirect(redirectUrl)
+    const isIndexpage = request.nextUrl.pathname === "/"
+    const isAuthRoute = authRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+    const isAdminRoute = adminRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+    const isGuestRoute = guestRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+
+    if (!token && (isAuthRoute || isAdminRoute)) {
+        if (request.nextUrl.pathname.startsWith("/api")) {
+            return getErrorResponse(401, "Token is invalid or user doesn't exists")
         }
-
-        //const response = NextResponse.next();
-
-        if (token) {
-            if (request.nextUrl.pathname.startsWith("/login") || request.nextUrl.pathname.startsWith("/register")) {
-                return NextResponse.redirect(new URL("/apps/domain", request.url))
-            }
-
-            //     // if (!token.email_verified_at && !isVerifyRoute) {
-            //     //     return NextResponse.redirect(
-            //     //         new URL("/request-email-verification", request.url)
-            //     //     );
-            //     // }
-            //     // if (isIndexpage || isGuestRoute || isVerifyRoute) {
-            //     //     return NextResponse.redirect(
-            //     //         new URL("/apps/domain", request.url)
-            //     //     );
-            //     // }
-        }
-    },
-    {
-        callbacks: {
-            async authorized({ req, token }) {
-                //console.log(token);
-                return true
-            },
-        },
+        const redirectUrl = new URL("/login", request.url)
+        redirectUrl.searchParams.set("callbackUrl", request.nextUrl.href)
+        return NextResponse.redirect(redirectUrl)
     }
-)
 
-const authRoutes = ["/apps/dashboard", "/apps/profile", "/api/session"]
-//const verifyRoutes: string[] = [];
+    // Check admin access
+    if (token && isAdminRoute) {
+        const userRole = (token as any).role as string
+        const isActive = (token as any).isActive as boolean
+        
+        if (!isActive) {
+            if (request.nextUrl.pathname.startsWith("/api")) {
+                return getErrorResponse(403, "Account is inactive")
+            }
+            return NextResponse.redirect(new URL("/login", request.url))
+        }
+        
+        if (userRole !== "ADMIN" && userRole !== "SUPER_ADMIN") {
+            if (request.nextUrl.pathname.startsWith("/api")) {
+                return getErrorResponse(403, "Admin access required")
+            }
+            return NextResponse.redirect(new URL("/apps/profile", request.url))
+        }
+    }
+
+    if (token) {
+        if (request.nextUrl.pathname.startsWith("/login") || request.nextUrl.pathname.startsWith("/register")) {
+            return NextResponse.redirect(new URL("/apps/domain", request.url))
+        }
+    }
+
+    return NextResponse.next()
+}
+
+const authRoutes = ["/apps/profile", "/api/session"]
+const adminRoutes = ["/admin", "/api/admin"]
 const guestRoutes = ["/", "/login", ""]
 
-// export const config = {
-//     matcher: [
-//         "/api/:path*",
-//         "/apps/:path*",
-//     ],
-// };
+export const config = {
+    matcher: [
+        "/api/:path*",
+        "/apps/:path*",
+        "/admin/:path*"
+    ],
+}

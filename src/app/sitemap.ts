@@ -1,8 +1,8 @@
 import { MetadataRoute } from "next"
-import { allPosts } from "contentlayer/generated"
+import { allPosts } from "@/lib/content"
 
 const blogRoutes: MetadataRoute.Sitemap = allPosts.map((post) => ({
-    url: `${process.env.NEXT_PUBLIC_URL}/${post._raw.flattenedPath}`,
+    url: `${process.env.NEXT_PUBLIC_URL}${post.slug}`,
     lastModified: post.date,
 }))
 

@@ -1,17 +1,25 @@
-version: "3.8"
 services:
-  frontend:
-    container_name: frontend
-    build:
-      context: .
-      target: dev
-    restart: always
-    command: yarn dev
-    environment:
-      - NODE_ENV=development
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
-    ports:
-      - 3000:3000
+    app:
+        container_name: nextjs-app
+        build:
+            context: .
+            target: dev
+        restart: always
+        command: sh -c "yarn docker:drizzle:push && yarn dev"
+        environment:
+            - NODE_ENV=development
+            - DATABASE_URL=file:./dev.db
+            - NEXTAUTH_URL=http://localhost:3000
+            - NEXTAUTH_SECRET=development-secret-key
+            - NEXT_PUBLIC_DOMAIN=localhost
+            - ACCESS_TOKEN=session-token
+        volumes:
+            - .:/app
+            - node_modules_cache:/app/node_modules
+            - next_cache:/app/.next
+        ports:
+            - "3000:3000"
+
+volumes:
+    node_modules_cache:
+    next_cache:

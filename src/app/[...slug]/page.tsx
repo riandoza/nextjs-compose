@@ -1,22 +1,23 @@
 import { Suspense } from "react"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { allPages } from "contentlayer/generated"
+import { allPages, getPageBySlug } from "@/lib/content"
 
 import { Mdx } from "@/components/mdx-components"
 
 interface PageProps {
-    params: {
+    params: Promise<{
         slug: string[]
-    }
+    }>
 }
 
 async function getPageFromParams(params: PageProps["params"]) {
-    const slug = params?.slug?.join("/")
-    const page = allPages.find((page) => page.slugAsParams === slug)
+    const resolvedParams = await params
+    const slug = `/${resolvedParams?.slug?.join("/")}`
+    const page = getPageBySlug(slug)
 
     if (!page) {
-        null
+        return null
     }
 
     return page
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return {}
     }
     const image = null
-    const pageUrl = `${process.env.NEXT_PUBLIC_URL}/${page.slugAsParams}`
+    const pageUrl = `${process.env.NEXT_PUBLIC_URL}${page.slug}`
     return {
         title: {
             template: `%s | ${page.title}`,
@@ -57,9 +58,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 }
 
-export async function generateStaticParams(): Promise<PageProps["params"][]> {
+export async function generateStaticParams() {
     return allPages.map((page) => ({
-        slug: page.slugAsParams.split("/"),
+        slug: page.slug.replace('/', '').split("/"),
     }))
 }
 
@@ -77,7 +78,7 @@ export default async function PagePage({ params }: PageProps) {
                     <h1>{page.title}</h1>
                     {page.description && <p className="text-xl">{page.description}</p>}
                     <hr />
-                    <Mdx code={page.body.code} />
+                    <Mdx>{page.content}</Mdx>
                 </article>
             </Suspense>
         </main>

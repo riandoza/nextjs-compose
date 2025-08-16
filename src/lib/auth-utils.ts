@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "./auth"
+import { auth } from "./auth"
 
 export type UserRole = "USER" | "ADMIN" | "SUPER_ADMIN"
 
@@ -12,11 +11,11 @@ export interface ExtendedUser {
 }
 
 export async function getServerAuthSession() {
-  return await getServerSession(authOptions)
+  return await auth()
 }
 
 export async function getCurrentUser(): Promise<ExtendedUser | null> {
-  const session = await getServerAuthSession()
+  const session = await auth()
   return session?.user ? (session.user as ExtendedUser) : null
 }
 

@@ -23,12 +23,6 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 export async function getAllUsers() {
   return await db.query.users.findMany({
     orderBy: desc(users.createdAt),
-    with: {
-      _count: {
-        posts: true,
-        pages: true,
-      },
-    },
   });
 }
 

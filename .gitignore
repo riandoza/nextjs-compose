@@ -70,8 +70,12 @@ DOCUMENTATION.md
 .eslintcache
 
 # Prisma
-prisma/*
-!prisma/schema.prisma
+prisma/.prisma/
+prisma/migrations/
 
-# Contentlayer
+# Contentlayer (deprecated)
 .contentlayer
+
+# Project Documentation
+docs/
+CLAUDE.md

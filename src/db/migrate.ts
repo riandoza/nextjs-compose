@@ -1,8 +1,8 @@
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import { db, sqlite } from './connection';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { db, pool } from './connection';
 
 async function runMigrations() {
-  console.log('🔄 Running Drizzle migrations...');
+  console.log('🔄 Running Drizzle PostgreSQL migrations...');
   
   try {
     await migrate(db, { migrationsFolder: './drizzle' });
@@ -11,7 +11,7 @@ async function runMigrations() {
     console.error('❌ Migration failed:', error);
     process.exit(1);
   } finally {
-    sqlite.close();
+    await pool.end();
   }
 }
 

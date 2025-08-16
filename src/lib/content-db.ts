@@ -1,5 +1,8 @@
 // Database-driven content system to replace static content
-import { prisma } from "./prisma"
+import { eq, desc } from "drizzle-orm"
+import { db } from "@/db/connection"
+import { posts, pages } from "@/db/schema"
+import type { Post as DbPost, Page as DbPage } from "@/db/schema"
 
 export interface Post {
   slug: string
@@ -21,16 +24,13 @@ export interface Page {
 }
 
 export async function getAllPosts(): Promise<Post[]> {
-  const posts = await prisma.post.findMany({
-    where: {
-      published: true,
-    },
-    orderBy: {
-      publishedAt: "desc",
-    },
-  })
+  const dbPosts = await db
+    .select()
+    .from(posts)
+    .where(eq(posts.published, true))
+    .orderBy(desc(posts.publishedAt))
 
-  return posts.map(post => ({
+  return dbPosts.map((post: DbPost) => ({
     slug: `/posts/${post.slug}`,
     title: post.title,
     description: post.description,
@@ -42,16 +42,13 @@ export async function getAllPosts(): Promise<Post[]> {
 }
 
 export async function getAllPages(): Promise<Page[]> {
-  const pages = await prisma.page.findMany({
-    where: {
-      published: true,
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
-  })
+  const dbPages = await db
+    .select()
+    .from(pages)
+    .where(eq(pages.published, true))
+    .orderBy(desc(pages.updatedAt))
 
-  return pages.map(page => ({
+  return dbPages.map((page: DbPage) => ({
     slug: `/${page.slug}`,
     title: page.title,
     description: page.description,
@@ -62,16 +59,13 @@ export async function getAllPages(): Promise<Page[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  // Remove /posts/ prefix if present
-  const postSlug = slug.replace(/^\/posts\//, '')
-  
-  const post = await prisma.post.findUnique({
-    where: {
-      slug: postSlug,
-      published: true,
-    },
-  })
+  const result = await db
+    .select()
+    .from(posts)
+    .where(eq(posts.slug, slug))
+    .limit(1)
 
+  const post = result[0]
   if (!post) return null
 
   return {
@@ -86,16 +80,13 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 }
 
 export async function getPageBySlug(slug: string): Promise<Page | null> {
-  // Remove leading slash if present
-  const pageSlug = slug.replace(/^\//, '')
-  
-  const page = await prisma.page.findUnique({
-    where: {
-      slug: pageSlug,
-      published: true,
-    },
-  })
+  const result = await db
+    .select()
+    .from(pages)
+    .where(eq(pages.slug, slug))
+    .limit(1)
 
+  const page = result[0]
   if (!page) return null
 
   return {
@@ -107,8 +98,3 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
     published: page.published,
   }
 }
-
-// For backwards compatibility, export as allPosts and allPages
-// Note: These will need to be called as functions in the components
-export const allPosts = getAllPosts()
-export const allPages = getAllPages()

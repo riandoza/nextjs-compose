@@ -78,4 +78,5 @@ prisma/migrations/
 
 # Project Documentation
 docs/
+.claude
 CLAUDE.md

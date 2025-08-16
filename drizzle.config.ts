@@ -3,8 +3,8 @@ import { defineConfig } from 'drizzle-kit';
 export default defineConfig({
   schema: './src/db/schema.ts',
   out: './drizzle',
-  dialect: 'sqlite',
+  dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL || './dev.db',
+    url: process.env.DATABASE_URL || 'postgresql://nextjs_user:nextjs_password@localhost:5432/nextjs_app',
   },
 });

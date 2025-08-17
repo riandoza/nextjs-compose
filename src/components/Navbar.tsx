@@ -60,22 +60,22 @@ export default function Navbar() {
                 <NavigationMenu className="relative z-10 max-w-full flex-1 items-center justify-center sm:flex-none md:max-w-max lg:flex">
                     <NavigationMenuList className="group group flex max-w-screen-xl flex-1 list-none flex-wrap items-center justify-center space-x-0 space-y-1 pt-4 md:flex-none md:flex-row md:space-x-1 md:space-y-0 md:pt-0 lg:flex lg:space-x-1">
                         <NavigationMenuItem className="block w-full md:w-max">
-                            <Link href="/" legacyBehavior passHref>
-                                <NavigationMenuLink className={`${navigationMenuTriggerStyle()}`}>
+                            <NavigationMenuLink asChild>
+                                <Link href="/" className={`${navigationMenuTriggerStyle()}`}>
                                     Home
-                                </NavigationMenuLink>
-                            </Link>
+                                </Link>
+                            </NavigationMenuLink>
                         </NavigationMenuItem>
 
                         {latestPosts.length > 0 && (
                             <>
                                 <NavigationMenuItem className="block w-full md:w-max">
                                     <NavigationMenuTrigger className="w-full">
-                                        <Link href="/posts" legacyBehavior passHref>
-                                            <NavigationMenuLink className={`${navigationMenuTriggerStyle()}`}>
+                                        <NavigationMenuLink asChild>
+                                            <Link href="/posts" className={`${navigationMenuTriggerStyle()}`}>
                                                 Blog
-                                            </NavigationMenuLink>
-                                        </Link>
+                                            </Link>
+                                        </NavigationMenuLink>
                                     </NavigationMenuTrigger>
                                     <NavigationMenuContent>
                                         <ul className="grid w-full gap-3 p-2 md:w-[460px] md:grid-cols-2 lg:w-[600px] ">
@@ -100,35 +100,33 @@ export default function Navbar() {
                         )}
 
                         <NavigationMenuItem className="block w-full md:w-max">
-                            <Link href="/about" legacyBehavior passHref>
-                                <NavigationMenuLink className={`${navigationMenuTriggerStyle()}`}>
+                            <NavigationMenuLink asChild>
+                                <Link href="/about" className={`${navigationMenuTriggerStyle()}`}>
                                     About
-                                </NavigationMenuLink>
-                            </Link>
+                                </Link>
+                            </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem className="block w-full md:w-max">
-                            <Link href="/pokemon" legacyBehavior passHref>
-                                <NavigationMenuLink className={`${navigationMenuTriggerStyle()}`}>
+                            <NavigationMenuLink asChild>
+                                <Link href="/pokemon" className={`${navigationMenuTriggerStyle()}`}>
                                     Pokemon
-                                </NavigationMenuLink>
-                            </Link>
+                                </Link>
+                            </NavigationMenuLink>
                         </NavigationMenuItem>
                         <NavigationMenuItem className="block w-full md:w-max">
-                            <Link href="" legacyBehavior passHref>
-                                <NavigationMenuLink
-                                    className={`${buttonVariants({
-                                        variant: "destructive",
-                                    })} ${navigationMenuTriggerStyle()}`}
-                                    onClick={() => {
-                                        toast({
-                                            title: "Scheduled: Catch up",
-                                            description: "Friday, February 10, 2023 at 5:57 PM",
-                                        })
-                                    }}
-                                >
-                                    Action <ChevronRight className="absolute right-4 h-4 w-4 md:relative md:right-0" />
-                                </NavigationMenuLink>
-                            </Link>
+                            <NavigationMenuLink
+                                className={`${buttonVariants({
+                                    variant: "destructive",
+                                })} ${navigationMenuTriggerStyle()}`}
+                                onClick={() => {
+                                    toast({
+                                        title: "Scheduled: Catch up",
+                                        description: "Friday, February 10, 2023 at 5:57 PM",
+                                    })
+                                }}
+                            >
+                                Action <ChevronRight className="absolute right-4 h-4 w-4 md:relative md:right-0" />
+                            </NavigationMenuLink>
                         </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>

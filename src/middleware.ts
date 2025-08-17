@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
 
-import { auth } from "@/lib/auth"
 import { getErrorResponse } from "./lib/helpers"
 
 export default async function middleware(request: NextRequest) {
-    const session = await auth()
-    const token = session?.user
+    const token = await getToken({ 
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET
+    })
 
     const isIndexpage = request.nextUrl.pathname === "/"
     const isAuthRoute = authRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
@@ -23,8 +25,8 @@ export default async function middleware(request: NextRequest) {
 
     // Check admin access
     if (token && isAdminRoute) {
-        const userRole = (token as any).role as string
-        const isActive = (token as any).isActive as boolean
+        const userRole = token.role as string
+        const isActive = token.isActive as boolean
         
         if (!isActive) {
             if (request.nextUrl.pathname.startsWith("/api")) {

@@ -1,48 +1,56 @@
 services:
-    postgres:
-        image: postgres:15-alpine
-        container_name: nextjs-postgres
-        restart: always
-        environment:
-            - POSTGRES_DB=nextjs_app
-            - POSTGRES_USER=nextjs_user
-            - POSTGRES_PASSWORD=nextjs_password
-        volumes:
-            - postgres_data:/var/lib/postgresql/data
-        ports:
-            - "5432:5432"
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U nextjs_user -d nextjs_app"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
+  postgres:
+    image: postgres:15-alpine
+    container_name: nextjs-postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=nextjs_app
+      - POSTGRES_USER=nextjs_user
+      - POSTGRES_PASSWORD=nextjs_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nextjs_user -d nextjs_app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-    app:
-        container_name: nextjs-app
-        build:
-            context: .
-            target: dev
-        restart: always
-        command: sh -c "npx next dev"
-        environment:
-            - NODE_ENV=development
-            - DATABASE_URL=postgresql://nextjs_user:nextjs_password@postgres:5432/nextjs_app
-            - NEXTAUTH_URL=http://localhost:3000
-            - NEXTAUTH_SECRET=development-secret-key
-            - NEXT_PUBLIC_DOMAIN=localhost
-            - NEXT_PUBLIC_URL=http://localhost:3000
-            - ACCESS_TOKEN=session-token
-        volumes:
-            - .:/app
-            - node_modules_cache:/app/node_modules
-            - next_cache:/app/.next
-        ports:
-            - "3000:3000"
-        depends_on:
-            postgres:
-                condition: service_healthy
+  app:
+    container_name: nextjs-app
+    build:
+      context: .
+      target: dev
+    restart: always
+    command: sh -c "yarn dev"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://nextjs_user:nextjs_password@postgres:5432/nextjs_app
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=development-secret-key
+      - NEXT_PUBLIC_DOMAIN=localhost
+      - NEXT_PUBLIC_URL=http://localhost:3000
+      - ACCESS_TOKEN=session-token
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2"
+        reservations:
+          memory: 1G
+          cpus: "1"
+    volumes:
+      - .:/app
+      - node_modules_cache:/app/node_modules
+      - next_cache:/app/.next
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
-    node_modules_cache:
-    next_cache:
-    postgres_data:
+  node_modules_cache:
+  next_cache:
+  postgres_data:

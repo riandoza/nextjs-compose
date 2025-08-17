@@ -61,9 +61,6 @@ coverage
 *.sqlite
 *.sqlite3
 
-# Generated Prisma client
-prisma/.prisma
-
 # Documentation (optional - include if needed in container)
 # README.md
 docs/

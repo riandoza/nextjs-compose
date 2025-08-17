@@ -67,8 +67,6 @@ db-migrate: ## Run Prisma migrations
 db-seed: ## Seed the database
 	yarn db:seed
 
-db-studio: ## Open Prisma Studio
-	yarn db:browser
 
 db-reset: ## Reset database (migrate + seed)
 	yarn db:push

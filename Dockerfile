@@ -15,7 +15,7 @@ COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .yarnrc.docker-s
 RUN mv .yarnrc.docker-simple.yml .yarnrc.yml
 
 RUN \
-  if [ -f yarn.lock ]; then yarn install --immutable; \
+  if [ -f yarn.lock ]; then yarn install --immutable --network-timeout 1000000; \
   elif [ -f package-lock.json ]; then npm ci; \
   elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
@@ -33,12 +33,11 @@ COPY --from=deps /app/.yarnrc.yml ./.yarnrc.yml
 COPY package.json yarn.lock* .nvmrc ./
 COPY src ./src/
 COPY public ./public/
-COPY prisma ./prisma/
 COPY drizzle.config.ts ./
 COPY next.config.mjs ./
 COPY tailwind.config.ts ./
 COPY tsconfig.json ./
-COPY postcss.config.js ./ 
+COPY postcss.config.js ./
 COPY prettier.config.js ./
 COPY components.json ./
 

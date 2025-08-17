@@ -9,5 +9,4 @@ build
 .contentlayer
 .vscode
 .yarn
-prisma
 content

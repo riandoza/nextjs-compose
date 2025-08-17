@@ -20,7 +20,7 @@ export const LoginForm = () => {
         e.preventDefault()
         try {
             setLoading(true)
-            setFormValues({ email: "", password: "" })
+            setError("")
 
             const res = await signIn("credentials", {
                 redirect: false,
@@ -28,6 +28,8 @@ export const LoginForm = () => {
                 password: formValues.password,
                 callbackUrl,
             })
+
+            setFormValues({ email: "", password: "" })
 
             setLoading(false)
 
